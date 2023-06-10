@@ -40,9 +40,7 @@ if __name__ == '__main__':
         print("1. Get token pools.")
         print("2. Update structured pair list. Last time updated: ", last_stp_modified_time)
         print("3. Update uniswap surface rates. Last time updated: ", last_usr_modified_time)
-        print("4. ...")
-        print("5. ...")
-        print("6. Exit.")
+        print("4. Exit.")
 
         opc = int(input("\nPick an option: "))
 
@@ -63,14 +61,6 @@ if __name__ == '__main__':
             print("Uniswap surface rates has been generated\n")
 
         elif opc == 4:
-
-            print("Opc4")
-
-        elif opc == 5:
-
-            print("Opc5")
-
-        elif opc == 6:
 
             print("\nClosing program\n")
             close = True
