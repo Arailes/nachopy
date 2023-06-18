@@ -51,14 +51,14 @@ if __name__ == '__main__':
 
         elif opc == 2:
 
-            triarblogic.structure_triangular_pairs(pools)
-            print("Pool list has been structured\n")
+            pairsCount = triarblogic.structure_triangular_pairs(pools)
+            print("Pool list has been structured.", pairsCount, "triangular pairs found.\n")
 
         elif opc == 3:
 
             min_rate = 5
-            triarblogic.triangular_arb_surface_rate(min_rate)
-            print("Uniswap surface rates has been generated\n")
+            arbiCount = triarblogic.triangular_arb_surface_rate(min_rate)
+            print("Uniswap surface rates has been generated.", arbiCount, "possible arbitrage opportunities found.\n")
 
         elif opc == 4:
 

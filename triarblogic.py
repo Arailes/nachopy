@@ -10,7 +10,7 @@ def retrieve_uniswap_info():
 
     query = """ 
         {
-            pools(orderBy: totalValueLockedETH, orderDirection: desc, first: 500) {
+            pools(orderBy: totalValueLockedETH, orderDirection: desc, first: 1000) {
                 id
                 totalValueLockedETH
                 token0Price
@@ -61,6 +61,7 @@ def structure_triangular_pairs(pools):
 
         aContract = pairA["id"]
         aPairBox = [pairA_base, pairA_quote]
+        contractsBox = [a_token0_id, a_token1_id]
         aPair = pairA_base + "_" + pairA_quote
 
         # Pair B
@@ -83,7 +84,7 @@ def structure_triangular_pairs(pools):
 
             if aPair != bPair:
 
-                if pairB_base in aPairBox or pairB_quote in aPairBox:
+                if (pairB_base in aPairBox or pairB_quote in aPairBox) and (b_token0_id in contractsBox or b_token1_id in contractsBox):
 
                     # Pair C
                     for pairC in pools:
@@ -106,6 +107,7 @@ def structure_triangular_pairs(pools):
                         if cPair != aPair and cPair != bPair:
 
                             pair_box = [pairA_base, pairA_quote, pairB_base, pairB_quote, pairC_base, pairC_quote]
+                            contractsBox = [a_token0_id, a_token1_id, b_token0_id, b_token1_id, c_token0_id, c_token1_id]
 
                             counts_pairC_quote = 0
 
@@ -113,13 +115,25 @@ def structure_triangular_pairs(pools):
                                 if i == pairC_quote:
                                     counts_pairC_quote += 1
 
+                            counts_c_token1_id = 0
+
+                            for i in contractsBox:
+                                if i == c_token1_id:
+                                    counts_c_token1_id += 1
+
                             counts_pairC_base = 0
 
                             for i in pair_box:
                                 if i == pairC_base:
                                     counts_pairC_base += 1
 
-                            if counts_pairC_base == 2 and counts_pairC_quote == 2 and pairC_base != pairC_quote:
+                            counts_c_token0_id = 0
+
+                            for i in contractsBox:
+                                if i == c_token0_id:
+                                    counts_c_token0_id += 1
+
+                            if counts_pairC_base == 2 and counts_pairC_quote == 2 and counts_c_token0_id == 2 and counts_c_token1_id == 2 and pairC_base != pairC_quote:
 
                                 combined = aPair + "," + bPair + "," + cPair
                                 unique_item = ''.join(sorted(combined))
@@ -167,6 +181,8 @@ def structure_triangular_pairs(pools):
 
     with open("structured_triangular_pairs.json", "w") as fp:
         json.dump(triangular_pairs_list, fp)
+
+    return len(triangular_pairs_list)
 
 # This function will calculate surface arb potential
 def triangular_arb_surface_rate(min_rate):
@@ -468,13 +484,4 @@ def triangular_arb_surface_rate(min_rate):
     with open("uniswap_surface_rates.json", "w") as fp:
         json.dump(surface_rate_list, fp)
 
-
-
-
-
-
-
-
-
-
-
+    return len(surface_rate_list)
